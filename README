@@ -1,0 +1,4 @@
+Need to install cairo first to get npm install to run
+dependency for resemble
+
+  sudo apt-get install libcairo2-dev
