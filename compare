@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+if (process.argv.length < 4) {
+    console.error('Usage: compare <image1> <image2>');
+    process.exit();
+}
+
+var resemble = require('resemble').resemble,
+    fs = require('fs');
+
+var img1 = process.argv[2],
+    img2 = process.argv[3];
+
+resemble(img1).compareTo(img2).onComplete(function(data){
+    fs.writeFile("result.png", new Buffer(data.getImageDataUrl().split(',').slice(1).join(), "base64"), function(err) {});
+    return data;
+});
