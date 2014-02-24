@@ -1,27 +1,35 @@
-var system = require('system');
+var system = require('system'),
+    async = require('async');
 if (system.args.length < 3) {
     console.log('Usage: phantomjs snapshot url1 url2');
     phantom.exit();
 }
 
 var webpage = require('webpage');
-var page = webpage.create();
 
-var urls = Array.prototype.slice.call(system.args, 1);
+var urls = [];
+var argUrls = Array.prototype.slice.call(system.args, 1);
+for (var i = 0; i < argUrls.length; i++) {
+    urls.push({
+        url: argUrls[i],
+        file: (i+1) + '.png'
+    });
+}
 
-(function doPages(page, urls, counter) {
-    if (urls.length === 0) {
+
+async.eachSeries(
+    urls,
+    function (url, done) {
+        var page = webpage.create();
+        page.open(url.url, function () {
+            page.render(url.file);
+            done();
+        });
+    },
+    function (err) {
+        if (err) {
+            console.err(err);
+        }
         phantom.exit();
     }
-
-    if ('undefined' === typeof counter) {
-        counter = 1;
-    }
-
-    var url = urls.shift();
-    page.open(url, function () {
-        page.render(counter + '.png');
-        doPages(page, urls, counter + 1);
-    });
-})(page, urls);
-
+);

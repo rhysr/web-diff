@@ -9,6 +9,7 @@
   "author": "",
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "resemble": "~1.0.3"
+    "resemble": "~1.0.3",
+    "async": "~0.2.10"
   }
 }
