@@ -4,17 +4,24 @@ if (system.args.length < 3) {
     phantom.exit();
 }
 
-
-var urls = Array.prototype.slice.call(system.args, 1);
-
 var webpage = require('webpage');
 var page = webpage.create();
 
-page.open(urls[0], function() {
-    page.render('1.png');
-    page.open(urls[1], function() {
-        page.render('2.png');
+var urls = Array.prototype.slice.call(system.args, 1);
+
+(function doPages(page, urls, counter) {
+    if (urls.length === 0) {
         phantom.exit();
+    }
+
+    if ('undefined' === typeof counter) {
+        counter = 1;
+    }
+
+    var url = urls.shift();
+    page.open(url, function () {
+        page.render(counter + '.png');
+        doPages(page, urls, counter + 1);
     });
-});
+})(page, urls);
 
